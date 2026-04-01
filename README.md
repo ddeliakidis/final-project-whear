@@ -1,18 +1,18 @@
 # Final Project
 
-**Team Number:**
+**Team Number:** 4
 
-**Team Name:**
+**Team Name:** Whear
 
-| Team Member Name | Email Address       |
-|------------------|---------------------|
-| [Name 1]         | [Email 1]           |
-| [Name 2]         | [Email 2]           |
-| [Name 3]         | [Email 3]           |
+| Team Member Name    | Email Address           |
+| ------------------- | ----------------------- |
+| jefferson ding      | tyding@seas.upenn.edu   |
+| dimitris deliakidis | ddelias@seas.upenn.edu  |
+| carly googel        | cagoogel@seas.upenn.edu |
 
-**GitHub Repository URL:**
+**GitHub Repository URL:** https://github.com/upenn-embedded/final-project-whear
 
-**GitHub Pages Website URL:** [for final submission]*
+**GitHub Pages Website URL:** [for final submission]\*
 
 ## Final Project Proposal
 
@@ -56,9 +56,7 @@ Here, you will define any special terms, acronyms, or abbreviations you plan to 
 
 ### 7. Bill of Materials (BOM)
 
-
 ### 8. Final Demo Goals
-
 
 ### 9. Sprint Planning
 
@@ -92,7 +90,7 @@ Here, you will define any special terms, acronyms, or abbreviations you plan to 
 ## Final Report
 
 Don't forget to make the GitHub pages public website!
-If you’ve never made a GitHub pages website before, you can follow this webpage (though, substitute your final project repository for the GitHub username one in the quickstart guide):  [https://docs.github.com/en/pages/quickstart](https://docs.github.com/en/pages/quickstart)
+If you’ve never made a GitHub pages website before, you can follow this webpage (though, substitute your final project repository for the GitHub username one in the quickstart guide): [https://docs.github.com/en/pages/quickstart](https://docs.github.com/en/pages/quickstart)
 
 ### 1. Video
 
@@ -115,6 +113,4 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 ### 4. Conclusion
 
-
 ## References
-
