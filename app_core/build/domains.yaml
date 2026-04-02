@@ -1,0 +1,7 @@
+default: app_core
+build_dir: /Users/tydin/Documents/Penn/2025-2026/ESE_3500/final-project-whear/app_core/build
+domains:
+  - name: app_core
+    build_dir: /Users/tydin/Documents/Penn/2025-2026/ESE_3500/final-project-whear/app_core/build/app_core
+flash_order:
+  - app_core
