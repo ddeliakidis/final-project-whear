@@ -21,3 +21,5 @@
 #User Specific Files
 *.atsuo
 .clangd
+.claude
+CLAUDE.md
