@@ -3,12 +3,15 @@
  *   USART1  →  YRM100 RFID        (PA9 TX, PA10 RX)
  *   USART2  →  Debug via ST-Link VCOM  (PA2 TX, PA3 RX)
  *   USART6  →  ESP32 bridge        (PC6 TX, PC7 RX)
+ *   SPI1    →  ST7735 1.8" TFT    (PA5 SCK, PA7 MOSI, PB0 DC, PB1 RST, PB2 CS)
  *   GPIO    →  READY pin (PA8, input from ESP32)
  */
 
 #include <stdint.h>
 #include <string.h>
 #include "lib/yrm100/yrm100.h"
+#include "lib/display/st7735.h"
+#include "lib/display/lcd_gfx.h"
 
 /* ── Minimal STM32F411RE register map ────────────────────────────── */
 
@@ -257,6 +260,46 @@ static void prune_stale_tags(void) {
     num_tags = write;
 }
 
+/* ── Display helpers ────────────────────────────────────────────── */
+
+static char *u8_to_str(uint8_t v, char *p) {
+    if (v >= 100) *p++ = '0' + v / 100;
+    if (v >= 10)  *p++ = '0' + (v / 10) % 10;
+    *p++ = '0' + v % 10;
+    return p;
+}
+
+static char *byte_to_hex(uint8_t b, char *p) {
+    static const char hex[] = "0123456789ABCDEF";
+    *p++ = hex[b >> 4];
+    *p++ = hex[b & 0x0F];
+    return p;
+}
+
+static void display_update(uint8_t tag_count, const yrm100_tag_t *last_tag) {
+    char line[32];
+    char *p;
+
+    LCD_drawBlock(0, 0, LCD_WIDTH - 1, 47, BLACK);
+
+    LCD_drawString(4, 4, "Whear RFID", CYAN, BLACK);
+
+    p = line;
+    const char *prefix = "Tags: ";
+    while (*prefix) *p++ = *prefix++;
+    p = u8_to_str(tag_count, p);
+    *p = '\0';
+    LCD_drawString(4, 20, line, WHITE, BLACK);
+
+    if (last_tag && last_tag->epc_len > 0) {
+        p = line;
+        uint8_t show = last_tag->epc_len > 6 ? 6 : last_tag->epc_len;
+        for (uint8_t i = 0; i < show; i++) p = byte_to_hex(last_tag->epc[i], p);
+        *p = '\0';
+        LCD_drawString(4, 36, line, YELLOW, BLACK);
+    }
+}
+
 static void print_tag(const yrm100_tag_t *tag) {
     dbg_puts("EPC: ");
     for (uint8_t i = 0; i < tag->epc_len; i++) {
@@ -280,6 +323,11 @@ int main(void) {
     gpio_init();
     usart2_init();
     esp_uart_init();
+
+    lcd_init();
+    LCD_setScreen(BLACK);
+    LCD_drawString(4, 4,  "Whear RFID", CYAN, BLACK);
+    LCD_drawString(4, 20, "booting...",  WHITE, BLACK);
 
     dbg_puts("\r\n=== Whear STM32 RFID Scanner ===\r\n");
     dbg_puts("Waiting for ESP32 READY...\r\n");
@@ -361,6 +409,9 @@ int main(void) {
                 dbg_puts(" tags\r\n");
                 esp_send_tags(seen_tags, num_tags);
             }
+
+            display_update(num_tags, num_tags > 0 ? &seen_tags[num_tags - 1] : 0);
+
             last_send = millis();
             /* tags persist; prune_stale_tags() removes them when TTL expires.
                Inventory keeps running from the initial 0xFFFF rounds. */
